@@ -1,6 +1,7 @@
 import exception.InsufficientFundsException;
 import exception.InvalidAccountException;
 import exception.InvalidAmountException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -11,37 +12,40 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BankAccountTest {
 
+    BankAccount acc1;
+    BankAccount acc2;
+
+    @BeforeEach
+    public void setUp() {
+        acc1 = new BankAccount("ACC001", 1000, "Bill");
+        acc2 = new BankAccount("ACC002", 1000, "Anna");
+    }
+
     @Test
     public void depositShouldIncreaseBalance() {
-        BankAccount acc1 = new BankAccount("ACC001", 1000, "Bill");
         acc1.deposit(500);
         assertEquals(1500, acc1.getBalance());
     }
 
     @Test
     public void withdrawShouldDecreaseBalance() throws InsufficientFundsException, InvalidAmountException {
-        BankAccount acc2 = new BankAccount("ACC002", 1000, "Bob");
         acc2.withdraw(300);
         assertEquals(700, acc2.getBalance());
     }
 
     @Test
     public void withdrawShouldThrowInsufficientFunds() {
-        BankAccount acc3 = new BankAccount("ACC003", 500, "Michel");
-        assertThrows(InsufficientFundsException.class, () -> acc3.withdraw(1000));
+        assertThrows(InsufficientFundsException.class, () -> acc2.withdraw(1500));
     }
 
     @Test
     public void depositShouldThrowNegativeAmount() {
-        BankAccount acc4 = new BankAccount("ACC004", 1000, "Anna");
-        assertThrows(IllegalArgumentException.class, () -> acc4.deposit(-500));
+        assertThrows(IllegalArgumentException.class, () -> acc1.deposit(-500));
     }
 
     @Test
     public void transferShouldMoveBetweenAccounts() throws InsufficientFundsException, InvalidAmountException,
             AccountNotFoundException, InvalidAccountException {
-        BankAccount acc1 = new BankAccount("ACC001", 1000, "Bill");
-        BankAccount acc2 = new BankAccount("ACC002", 1000, "Bob");
         List<BankAccount> accounts = new ArrayList<>();
         accounts.add(acc1);
         accounts.add(acc2);
