@@ -37,6 +37,7 @@ public class BankAccount{
                             balance, amount));
         }
         balance -= amount;
+        System.out.println("Была списана сумма: " + amount);
     }
 
     @Override
